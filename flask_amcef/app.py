@@ -1,19 +1,16 @@
 from flask import Flask , render_template ,url_for , redirect ,request  
-#       THIS BELONGES TO LOGIN / REGISTER
-#from flask_bootstrap import Bootstrap
-from sqlalchemy import desc, func 
+from sqlalchemy import desc 
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin , login_user , login_required , logout_user , current_user , LoginManager
 import json
 from flask_bootstrap import Bootstrap
 from flask_swagger_ui import get_swaggerui_blueprint
+#importing forms from forms.py
 from forms import LoginForm , RegisterForm , PostsForm
-
-
-
 
 app = Flask(__name__)
 
+#configuration of aplication
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///databse.db'
 app.config['SECRET_KEY'] = 'totomabyttajnykluc'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
@@ -22,6 +19,7 @@ app.config['SQLALCHEMY_BINDS'] = {
     'posts' : 'sqlite:///databse.db' 
 }
 
+#importing swagger docs
 SWAGGER_URL = '/swagger'
 API_URL = '/static/swagger.json'
 SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
@@ -33,6 +31,7 @@ SWAGGERUI_BLUEPRINT = get_swaggerui_blueprint(
 )
 app.register_blueprint(SWAGGERUI_BLUEPRINT, url_prefix=SWAGGER_URL)
 
+#setting up bootstrap forms , current user in jinja and database
 bootstrap = Bootstrap(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
@@ -43,20 +42,23 @@ login_manager.login_view = 'login'
 def load_user(user_id):
     return users.query.get(int(user_id))
 
+#creating database tables
 @app.before_first_request
 def create_tables():
     db.create_all()
 create_tables()
 
+#just basic routes
 @app.route("/")
 def home():
-  return render_template('layout.html' , nadpis = "Home")
+  return render_template('layout.html' , nadpis = "Home" , content="Welcome to my page.")
 
 @app.route("/profile")
 @login_required
 def profile():
     return render_template('profile.html' , nadpis = "Profile" , meno = current_user)
 
+#database tables
 class users(UserMixin , db.Model):
     __bind_key__ = 'users'
     id = db.Column(db.Integer , primary_key = True)
@@ -71,6 +73,7 @@ class posts(UserMixin , db.Model):
     title = db.Column(db.String(80))
     text = db.Column(db.String(80))
 
+#signup and login routes
 @app.route("/signup" , methods=['GET' , 'POST'])
 def signup():
     form = RegisterForm(request.form) 
@@ -78,7 +81,7 @@ def signup():
         new_user = users(username = form.username.data , email = form.email.data , password = form.password.data)
         db.session.add(new_user)
         db.session.commit()
-        return redirect(url_for('login'))
+        return render_template('login.html' , nadpis = "Login" , form = LoginForm(request.form))
     return render_template('signup.html' , nadpis = "Register" , form = form)
 
 @app.route("/login" , methods=['GET' , 'POST'])
@@ -99,7 +102,7 @@ def logout():
     logout_user()
     return redirect(url_for('home'))
 
-
+#all routes with posts
 @app.route("/allposts" , methods=['GET' , 'POST'])
 def allposts():
     page = request.args.get('page', 1, type=int)
@@ -151,12 +154,17 @@ def deletepost(id):
     db.session.commit()
     return redirect(url_for('profile'))
 
+#admin rights
 @app.route('/deleteallposts' , methods=['GET' , 'POST'])
 def deleteallposts():
-    db.session.query(posts).delete()
-    db.session.commit()
-    return redirect(url_for('profile'))
+    if int(current_user.get_id()) == 1 and request.method == "POST":
+        db.session.query(posts).delete()
+        db.session.commit()
+    elif int(current_user.get_id()) != 1:
+        return render_template('layout.html' , nadpis = "Home" , content="You are not allowed to be here!")
+    return render_template('fakeusers.html' , nadpis = "Fake users" , info = "Are you sure, that you want delete all posts?")
 
+#importing fake data of users
 @app.route("/fake_users" , methods=['GET' , 'POST'])
 @login_required
 def fake_users():
@@ -173,8 +181,11 @@ def fake_users():
             db.session.add(new_user)
             db.session.commit()
         return redirect(url_for('home'))
-    return render_template('fakeusers.html' , nadpis = "Fake users" , info = "10 new users?")
+    elif int(current_user.get_id()) != 1:
+        return render_template('layout.html' , nadpis = "Home" , content="You are not allowed to be here!")
+    return render_template('fakeusers.html' , nadpis = "Fake users" , info = "Are you sure, that you want to add 10 new users?")
 
+#importing fake data of posts
 @app.route("/fake_posts" , methods=['GET' , 'POST'])
 @login_required
 def fake_posts():
@@ -193,8 +204,10 @@ def fake_posts():
             new_post = posts(id = new_id, user_id = new_user_id , title = new_title , text = new_text)
             db.session.add(new_post)
             db.session.commit()
-        return redirect(url_for('home'))
-    return render_template('fakeusers.html' , nadpis = "Fake posts" , info = "100 new posts?")
+        return redirect(url_for('allposts'))
+    elif int(current_user.get_id()) != 1:
+        return render_template('layout.html' , nadpis = "Home" , content="You are not allowed to be here!")
+    return render_template('fakeusers.html' , nadpis = "Fake posts" , info = "Are you sure, that you want to add 100 new posts?")
 
 if __name__ == "__main__":
     app.run(debug=True , port=2451)
