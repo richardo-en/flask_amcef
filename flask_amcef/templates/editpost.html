@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+  {% from "_formhelpers.html" import render_field %}
+  <div class="text-center signupform">
+    <form class="grid grid-cols-1" method="POST" action="">
+      <h2 class="text-lg lg:text-3xl tracking-widest ">Update post</h2>
+      {{ form.hidden_tag() }}
+      <div class="my-2 text-lg">{{ wtf.form_field(form.title) }}</div>
+        <div class="my-2 text-lg">{{ wtf.form_field(form.body) }}</div>
+      <input type="submit" value="Update info">
+    </form>
+  </div>
+{% endblock %}

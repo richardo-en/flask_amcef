@@ -1,0 +1,54 @@
+[
+  {
+    "username": "Antonette",
+    "email": "Shanna@melissa.tv",
+    "password" : "testing_password"
+    
+  },
+  {
+    "username": "Samantha",
+    "email": "Nathan@yesenia.net",
+    "password" : "testing_password1"
+  },
+  {
+    "username": "Karianne",
+    "email": "Julianne.OConner@kory.org",
+    "password" : "testing_password2"
+  },
+  {
+    "name": "Chelsey Dietrich",
+    "username": "Kamren",
+    "email": "Lucio_Hettinger@annie.ca",
+    "password" : "testing_password3"
+  },
+  {
+    "username": "Leopoldo_Corkery",
+    "email": "Karley_Dach@jasper.info",
+    "password" : "testing_password4"
+  },
+  {
+    "username": "Elwyn.Skiles",
+    "email": "Telly.Hoeger@billy.biz",
+    "password" : "testing_password5"
+  },
+  {
+    "username": "Maxime_Nienow",
+    "email": "Sherwood@rosamond.me",
+    "password" : "testing_password6"
+  },
+  {
+    "username": "Delphine",
+    "email": "Chaim_McDermott@dana.io",
+    "password" : "testing_password7"
+  },
+  {
+    "username": "Moriah.Stanton",
+    "email": "Rey.Padberg@karina.biz",
+    "password" : "testing_password8"
+  },
+  {
+    "username": "Bret",
+    "email": "Sincere@april.biz",
+    "password" : "testing_password9"
+  }
+]

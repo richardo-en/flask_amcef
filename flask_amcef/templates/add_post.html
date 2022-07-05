@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block content %}
+  <div class="text-center signupform">
+    <form class="grid grid-cols-1" method="POST" action="/add_post">
+      <h2 class="text-lg lg:text-3xl tracking-widest ">Add post</h2>
+      <div class="my-2 text-lg">{{ wtf.form_field(form.title) }}</div>
+      <div class="my-2 text-lg">{{ wtf.form_field(form.body) }}</div>
+      <button type="submit" class="btn btn-primary">Add post</button>
+    </form>
+  </div>
+
+
+{% endblock %}

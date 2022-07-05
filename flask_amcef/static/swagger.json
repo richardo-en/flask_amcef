@@ -1,0 +1,420 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "In thsi documentation you can read more about application itself and datas that are going trough this web aplication. It is simple web app where you are able to signup and add post, delete post or edit it.",
+    "version": "1.0.0",
+    "title": "Flask aplication",
+    "termsOfService": "http://swagger.io/terms/",
+    "contact": {
+      "email": "richard.richard@gmail.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "127.0.0.1:2451",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Basic pages",
+      "description": "Pages"
+    },
+    {
+      "name": "Posts",
+      "description": "Posts page"
+    },
+    {
+      "name": "Users",
+      "description": "Operations about user"
+    },
+    {
+      "name": "Admin",
+      "description": "Admin rights"
+    }
+  ],
+  "servers": [
+    {
+    "url": "/"
+    }
+],
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Basic pages"
+        ],
+        "summary": "Opens home page",
+        "description": "Opens home page where is in navigational bar with a few links. After sign up and logging in there will be more links you are able to work with.",
+        "operationId": "findPetsByStatus",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/profile": {
+      "get": {
+        "tags": [
+          "Basic pages"
+        ],
+        "summary": "Opens profile page",
+        "description": "To access this website you have to be logged in. Opens profile page where is basically nothing. When you have more accounts, you are able to discover here your username you are logged in with.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/allposts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Returns all updated posts from database.",
+        "description": "To access this website you don't need to be logged in. You are able to see all posts from all users, but you aren't allowed to edit them over here. In app.py file you can change per_page parameter to set how much posts will be displayed on website line (118).",
+        "operationId": "allposts",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/posts"
+              }
+            }
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/yourposts": {
+      "get": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Returns all your posts that are saved in database.",
+        "description": "To access this website you have to be logged in. You are able to see all your posts that are saved in database. Here you can delete post or edit post trough interface. Your posts are displayed by filtering them user_id with current user id. In app.py file you can change per_page parameter to set how much posts will be displayed on website (line 126).",
+        "operationId": "yourposts",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/add_post": {
+      "post": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Creating new post",
+        "description": "To access this website you have to be logged in. In this route are two fields which have to be filled up to create new post.",
+        "operationId": "add_post",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/posts"
+              }
+            }
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/editpost/{id}": {
+      "put": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Edit existing post",
+        "description": "To access this website you have to be logged in. If you clicked in Your posts site on edit button it opened another route with data of post. Here you are able to edit them. Fields have to be filled up to submit them. In code variable takes id of clicked post. On clicking on submit button it delete post with this id take information from form and add new post to database with same id.",
+        "operationId": "editpost",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Unique identificator of post",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/deletepost/{id}": {
+      "delete": {
+        "tags": [
+          "Posts"
+        ],
+        "summary": "Deleting post",
+        "description": "To access this website you have to be logged in. If you clicked in Your posts site on Delete button it deleted post from databse that you have created.",
+        "operationId": "deletepost",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "description": "Unique identificator of post",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/signup": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Create user",
+        "description": "Basic Sign up form. Data that are written into database like password or username aren't hashed, i'll explain it later why is that in admin.",
+        "operationId": "signup",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "304": {
+            "description": "One of the fields is written already in database, choose different username , email or password"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/login": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Logging in to account",
+        "description": "Opens route with two fields that are username and password. Code checks by filtering username if current usernames password is equal to password from password field. If yeas site will log us in, if not site will throw error.",
+        "operationId": "createUsersWithArrayInput",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Log in  was successful!"
+          },
+          "304": {
+            "description": "Invalid username or password or both."
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/logout": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "summary": "Logging out",
+        "description": "This function won't open any route won't ask if you really want to log out. It's just log you out :).",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Log in  was successful!"
+          },
+          "304": {
+            "description": "Invalid username or password or both."
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/fake_users": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Create fake users",
+        "description": "First created user which have id equal to one is automatically considered as admin. It's because he has access to functions that doesn't evry user have. In navigational bar will appear for him links like Add users , Add posts , Delete posts. Add users and Add posts will add fake data from json file to database. Delete posts will remove ALL POSTS!! Also admin is able to edit or delete even posts that aren't created by himself in Your posts route.",
+        "operationId": "fake_users",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "304": {
+            "description": "One of the fields is written already in database, choose different username , email or password"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/fake_posts": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Create fake users",
+        "description": "First created user which have id equal to one is automatically considered as admin. It's because he has access to functions that doesn't evry user have. In navigational bar will appear for him links like Add users , Add posts , Delete posts. Add users and Add posts will add fake data from json file to database. Delete posts will remove ALL POSTS!! Also admin is able to edit or delete even posts that aren't created by himself in Your posts route.",
+        "operationId": "fake_posts",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "304": {
+            "description": "One of the fields is written already in database, choose different username , email or password"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    },
+    "/deleteallposts": {
+      "post": {
+        "tags": [
+          "Admin"
+        ],
+        "summary": "Create fake users",
+        "description": "First created user which have id equal to one is automatically considered as admin. It's because he has access to functions that doesn't evry user have. In navigational bar will appear for him links like Add users , Add posts , Delete posts. Add users and Add posts will add fake data from json file to database. Delete posts will remove ALL POSTS!! Also admin is able to edit or delete even posts that aren't created by himself in Your posts route.",
+        "operationId": "deleteallposts",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Site was successfuly opened"
+          },
+          "304": {
+            "description": "One of the fields is written already in database, choose different username , email or password"
+          },
+          "404": {
+            "description": "Site wasnt able to open this section or something went wrong."
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "petstore_auth": {
+      "type": "oauth2",
+      "authorizationUrl": "http://petstore.swagger.io/oauth/dialog",
+      "flow": "implicit",
+      "scopes": {
+        "write:pets": "modify pets in your account",
+        "read:pets": "read your pets"
+      }
+    },
+    "api_key": {
+      "type": "apiKey",
+      "name": "api_key",
+      "in": "header"
+    }
+  },
+  "definitions": {
+    "posts": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "user_id": {
+          "type": "integer"
+        },
+        "title": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        }
+      }
+    },
+    "users": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "username": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "externalDocs": {
+    "description": "Find out more about Swagger",
+    "url": "http://swagger.io"
+  }
+}
