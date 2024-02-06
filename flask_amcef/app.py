@@ -5,6 +5,7 @@ from flask_login import UserMixin , login_user , login_required , logout_user , 
 import json
 from flask_bootstrap import Bootstrap
 from flask_swagger_ui import get_swaggerui_blueprint
+import os
 #importing forms from forms.py
 from forms import LoginForm , RegisterForm , PostsForm
 
@@ -169,45 +170,46 @@ def deleteallposts():
 @login_required
 def fake_users():
     if int(current_user.get_id()) == 1 and request.method == "POST":
-        json_data = open("src\\users.json")
-        json_obj = json.load(json_data)
-        for item in json_obj:
-
-            new_user_id = users.query.order_by(desc(users.id)).first()
-            new_username = item.get("username")
-            new_password = item.get("password")
-            new_email = item.get("email")
-            new_user = users(id = int(new_user_id.id) +1, username = new_username , password = new_password , email = new_email)
-            db.session.add(new_user)
-            db.session.commit()
+        json_path = os.path.join(os.path.dirname(__file__), 'src', 'users.json')
+        with open(json_path) as json_data:
+            json_obj = json.load(json_data)
+            for item in json_obj:
+                new_user_id = users.query.order_by(desc(users.id)).first()
+                new_username = item.get("username")
+                new_password = item.get("password")
+                new_email = item.get("email")
+                new_user = users(id = int(new_user_id.id) +1, username = new_username , password = new_password , email = new_email)
+                db.session.add(new_user)
+                db.session.commit()
         return redirect(url_for('home'))
     elif int(current_user.get_id()) != 1:
         return render_template('layout.html' , nadpis = "Home" , content="You are not allowed to be here!")
     return render_template('fakeusers.html' , nadpis = "Fake users" , info = "Are you sure, that you want to add 10 new users?")
 
 #importing fake data of posts
-@app.route("/fake_posts" , methods=['GET' , 'POST'])
+@app.route("/fake_posts", methods=['GET', 'POST'])
 @login_required
 def fake_posts():
     if int(current_user.get_id()) == 1 and request.method == "POST":
-        json_data = open("src\\posts.json")
-        json_obj = json.load(json_data)
-        for item in json_obj:
-            new_id = posts.query.order_by(desc(posts.id)).first()
-            if new_id == None:
-                new_id = 1
-            else:
-                new_id = int(new_id.id) +1
-            new_user_id = item.get("userId")
-            new_title = item.get("title")
-            new_text = item.get("body")
-            new_post = posts(id = new_id, user_id = new_user_id , title = new_title , text = new_text)
-            db.session.add(new_post)
-            db.session.commit()
+        json_path = os.path.join(os.path.dirname(__file__), 'src', 'posts.json')
+        with open(json_path) as json_data:
+            json_obj = json.load(json_data)
+            for item in json_obj:
+                new_id = posts.query.order_by(desc(posts.id)).first()
+                if new_id is None:
+                    new_id = 1
+                else:
+                    new_id = int(new_id.id) + 1
+                new_user_id = item.get("userId")
+                new_title = item.get("title")
+                new_text = item.get("body")
+                new_post = posts(id=new_id, user_id=new_user_id, title=new_title, text=new_text)
+                db.session.add(new_post)
+                db.session.commit()
         return redirect(url_for('allposts'))
     elif int(current_user.get_id()) != 1:
-        return render_template('layout.html' , nadpis = "Home" , content="You are not allowed to be here!")
-    return render_template('fakeusers.html' , nadpis = "Fake posts" , info = "Are you sure, that you want to add 100 new posts?")
+        return render_template('layout.html', nadpis="Home", content="You are not allowed to be here!")
+    return render_template('fakeusers.html', nadpis="Fake posts", info="Are you sure, that you want to add 100 new posts?")
 
 if __name__ == "__main__":
-    app.run(debug=True , port=2451)
+    app.run(debug=True, host='0.0.0.0', port=3000)
