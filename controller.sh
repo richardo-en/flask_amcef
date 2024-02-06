@@ -27,7 +27,6 @@ case "$1" in
     ;;
   help)
     echo "Here are commands that you can run with my app and docker. Enjoy!"
-    echo "install - Installs needed files for running aplicaiton"
     echo "run - Starts flask app"
     echo "clr - Deletes Image for this projects"
     echo "restart - Restarts app"
@@ -35,7 +34,7 @@ case "$1" in
     echo "stop - Stops any running containers"
     ;;
   *)
-    echo "Usage: install | run | clr | help | restart | update | stop"
+    echo "Usage: run | clr | help | restart | update | stop"
     exit 1
     ;;
 esac
